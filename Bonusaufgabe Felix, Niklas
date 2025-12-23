@@ -1,0 +1,169 @@
+# ============================================================
+# Bonus Assignment 1: Simple Messaging System
+# Modul: Programmieren für Wiwis (Uni Würzburg)
+#
+# Matrikelnummer(n): 2905429
+# ============================================================
+
+from dataclasses import dataclass, field
+from typing import Dict, List
+
+
+# ----------------------------
+# Datenmodell
+# ----------------------------
+@dataclass
+class User:
+    username: felix2904
+    password: 2905429
+    inbox: List[dict] = field(default_factory=list)
+    outbox: List[dict] = field(default_factory=list)
+
+    def check_password(self, pw: str) -> bool:
+        return self.password == pw
+
+
+# ----------------------------
+# Globale In-Memory-Datenbank
+# ----------------------------
+users: Dict[str, User] = {}
+
+
+# ----------------------------
+# Hilfsfunktionen
+# ----------------------------
+def prompt_nonempty(prompt: str) -> str:
+    """Fragt so lange ab, bis eine nicht-leere Eingabe erfolgt."""
+    while True:
+        value = input(prompt).strip()
+        if value:
+            return value
+        print("Eingabe darf nicht leer sein.")
+
+
+def authenticate(username: str, password: str) -> User | None:
+    """Gibt das User-Objekt zurück, wenn Username existiert und Passwort passt, sonst None."""
+    user = users.get(username)
+    if user is None:
+        return None
+    if not user.check_password(password):
+        return None
+    return user
+
+
+# ----------------------------
+# Menü-Aktionen
+# ----------------------------
+def create_account() -> None:
+    print("\n--- Account erstellen ---")
+    while True:
+        username = prompt_nonempty("Neuer Username: ")
+        if username in users:
+            print("Fehler: Username existiert bereits. Bitte wähle einen anderen.")
+        else:
+            break
+
+    password = prompt_nonempty("Neues Passwort: ")
+    users[username] = User(username=username, password=password)
+    print(f"Account '{username}' wurde erfolgreich erstellt.")
+
+
+def send_message() -> None:
+    print("\n--- Nachricht senden ---")
+    sender_username = prompt_nonempty("Sender-Username: ")
+    sender_password = prompt_nonempty("Sender-Passwort: ")
+    receiver_username = prompt_nonempty("Empfänger-Username: ")
+    message_text = prompt_nonempty("Nachricht: ")
+
+    # Empfänger prüfen
+    receiver = users.get(receiver_username)
+    if receiver is None:
+        print("Fehler: Empfänger existiert nicht.")
+        return
+
+    # Sender authentifizieren
+    sender = authenticate(sender_username, sender_password)
+    if sender is None:
+        print("Fehler: Sender-Login fehlgeschlagen (Username oder Passwort falsch).")
+        return
+
+    message = {
+        "sender": sender_username,
+        "receiver": receiver_username,
+        "message": message_text
+    }
+
+    receiver.inbox.append(message)
+    sender.outbox.append(message)
+    print("Nachricht wurde gesendet.")
+
+
+def view_inbox() -> None:
+    print("\n--- Inbox anzeigen ---")
+    username = prompt_nonempty("Username: ")
+    password = prompt_nonempty("Passwort: ")
+
+    user = authenticate(username, password)
+    if user is None:
+        print("Fehler: Login fehlgeschlagen (Username oder Passwort falsch).")
+        return
+
+    if not user.inbox:
+        print("Deine Inbox ist leer.")
+        return
+
+    print(f"\nNachrichten für '{username}':")
+    for msg in user.inbox:
+        print(f"Message from {msg['sender']}: {msg['message']}")
+
+
+def delete_account() -> None:
+    print("\n--- Account löschen ---")
+    username = prompt_nonempty("Username: ")
+    password = prompt_nonempty("Passwort: ")
+
+    user = authenticate(username, password)
+    if user is None:
+        print("Fehler: Login fehlgeschlagen (Username oder Passwort falsch).")
+        return
+
+    del users[username]
+    print(f"Account '{username}' wurde gelöscht.")
+
+
+# ----------------------------
+# Hauptprogramm (Menü-Schleife)
+# ----------------------------
+def print_menu() -> None:
+    print("\n==============================")
+    print(" Simple Messaging System")
+    print("==============================")
+    print("1. Create Account")
+    print("2. Send Message")
+    print("3. View Inbox")
+    print("4. Delete Account")
+    print("5. Exit")
+
+
+def main() -> None:
+    while True:
+        print_menu()
+        choice = input("Bitte Option wählen (1-5): ").strip()
+
+        if choice == "1":
+            create_account()
+        elif choice == "2":
+            send_message()
+        elif choice == "3":
+            view_inbox()
+        elif choice == "4":
+            delete_account()
+        elif choice == "5":
+            print("Programm wird beendet. (Daten bleiben nur für diese Session im Speicher.)")
+            break
+        else:
+            print("Ungültige Eingabe. Bitte 1-5 wählen.")
+
+
+if __name__ == "__Bonusaufgabe__":
+    main(Bonusaufgabe) 
