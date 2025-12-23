@@ -2,19 +2,18 @@
 # Bonus Assignment 1: Simple Messaging System
 # Modul: Programmieren für Wiwis (Uni Würzburg)
 #
-# Matrikelnummer(n): 2905429
+# Matrikelnummer(n): 2905429, 2946306
 # ============================================================
 
 from dataclasses import dataclass, field
 from typing import Dict, List
 
 
-# ----------------------------
-# Datenmodell
-# ----------------------------
+# Messeging System
+
 @dataclass
 class User:
-    username: felix2904
+    username: felix2904niklas
     password: 2905429
     inbox: List[dict] = field(default_factory=list)
     outbox: List[dict] = field(default_factory=list)
@@ -23,15 +22,15 @@ class User:
         return self.password == pw
 
 
-# ----------------------------
+
 # Globale In-Memory-Datenbank
-# ----------------------------
+
 users: Dict[str, User] = {}
 
 
-# ----------------------------
+
 # Hilfsfunktionen
-# ----------------------------
+
 def prompt_nonempty(prompt: str) -> str:
     """Fragt so lange ab, bis eine nicht-leere Eingabe erfolgt."""
     while True:
@@ -51,9 +50,9 @@ def authenticate(username: str, password: str) -> User | None:
     return user
 
 
-# ----------------------------
-# Menü-Aktionen
-# ----------------------------
+
+# Menü-System
+
 def create_account() -> None:
     print("\n--- Account erstellen ---")
     while True:
@@ -131,9 +130,9 @@ def delete_account() -> None:
     print(f"Account '{username}' wurde gelöscht.")
 
 
-# ----------------------------
+
 # Hauptprogramm (Menü-Schleife)
-# ----------------------------
+
 def print_menu() -> None:
     print("\n==============================")
     print(" Simple Messaging System")
@@ -165,5 +164,5 @@ def main() -> None:
             print("Ungültige Eingabe. Bitte 1-5 wählen.")
 
 
-if __name__ == "__Bonusaufgabe__":
-    main(Bonusaufgabe) 
+if __name__ == "__main__":
+    main() 
