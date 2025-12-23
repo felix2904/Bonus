@@ -29,7 +29,7 @@ users: Dict[str, User] = {}
 
 
 
-# Hilfsfunktionen
+# Zusatz
 
 def prompt_nonempty(prompt: str) -> str:
     """Fragt so lange ab, bis eine nicht-leere Eingabe erfolgt."""
